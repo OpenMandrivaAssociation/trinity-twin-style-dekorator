@@ -1,10 +1,6 @@
 %bcond clang 1
 
 # TDE variables
-%if "%{?tde_version}" == ""
-%define tde_version 14.1.5
-%endif
-
 %define tde_pkg twin-style-dekorator
 %define tde_prefix /opt/trinity
 
@@ -14,13 +10,13 @@
 %define _disable_rebuild_configure 1
 
 # fixes error: Empty %files file …/debugsourcefiles.list
-%define _debugsource_template %{nil}
+%undefine _debugsource_template
 
 %define tarball_name %{tde_pkg}-trinity
 
 Name:		trinity-%{tde_pkg}
-Version:	1.0.5
-Release:	%{?tde_version:%{tde_version}_}3
+Version:	14.1.6
+Release:	1
 Summary:	Semi transparant window decoration for Trinity
 Group:		Applications/Utilities
 URL:		http://www.trinitydesktop.org/
@@ -28,7 +24,7 @@ URL:		http://www.trinitydesktop.org/
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/themes/%{tarball_name}-%{tde_version}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/applications/themes/%{tarball_name}-%{version}.tar.xz
 
 BuildSystem:    cmake
 
@@ -41,12 +37,12 @@ BuildOption:    -DWITH_ALL_OPTIONS=ON
 BuildOption:    -DBUILD_ALL=ON
 BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
 
-BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
-BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	trinity-tdelibs-devel >= %{version}
+BuildRequires:	trinity-tdebase-devel >= %{version}
+BuildRequires:	trinity-tde-cmake >= %{version}
+
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
-
-BuildRequires:	trinity-tde-cmake >= %{tde_version}
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
@@ -70,7 +66,7 @@ And it is of course nice to look at. Upstream says:
 "- Don't forget to breathe, while drooling."
 
 
-%files
+%files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING
 %{tde_prefix}/%{_lib}/trinity/twin3_deKorator.la
@@ -79,5 +75,4 @@ And it is of course nice to look at. Upstream says:
 %{tde_prefix}/%{_lib}/trinity/twin_deKorator_config.so
 %{tde_prefix}/share/apps/deKorator/
 %{tde_prefix}/share/apps/twin/deKorator.desktop
-%lang(nl) %{tde_prefix}/share/locale/nl/LC_MESSAGES/*.mo
 
